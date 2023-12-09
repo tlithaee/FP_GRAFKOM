@@ -1,3 +1,4 @@
+
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -29,29 +30,106 @@ controls.autoRotate = false;
 controls.target = new THREE.Vector3(0, 1, 0);
 controls.update();
 
-const groundGeometry = new THREE.PlaneGeometry(0, 0, 30, 30);
-groundGeometry.rotateX(-Math.PI / 2);
-const groundMaterial = new THREE.MeshStandardMaterial({
-  color: 0x555555,
-  side: THREE.DoubleSide
-});
-
-const spotLight = new THREE.SpotLight(0x7F7FFF);
-spotLight.position.set(10, 50, 10);
-spotLight.castShadow = true;
-spotLight.shadow.bias = -0.0001;
-scene.add(spotLight);
-
-const spotLight1 = new THREE.SpotLight(0xDA70D6);
-spotLight1.position.set(10, 30, 10);
-spotLight1.castShadow = true;
-spotLight1.shadow.bias = -0.0001;
-scene.add(spotLight1);
-
 let mesh;
+let sun;
 
 const keyboardState = {};
 const mouseState = { x: 0, y: 0 };
+
+let ambientLight;
+let directionalLight;
+let hemisphereLight;
+
+// Function to create different lighting modes
+function setLightingMode(mode) {
+  // Remove existing lights and sun
+  scene.remove(ambientLight);
+  scene.remove(directionalLight);
+  scene.remove(hemisphereLight);
+  scene.remove(sun);
+
+  // Create new lights based on the mode
+  switch (mode) {
+    case 'morning':
+      ambientLight = new THREE.AmbientLight(0x404040);
+      directionalLight = new THREE.DirectionalLight(0xffccaa, 1);
+      directionalLight.position.set(10, 50, 10);
+      hemisphereLight = new THREE.HemisphereLight(0x87CEFA, 0x006400, 1);
+      break;
+    case 'day':
+      ambientLight = new THREE.AmbientLight(0x404040);
+      directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(10, 50, 10);
+      hemisphereLight = new THREE.HemisphereLight(0x87CEFA, 0x006400, 1);
+      break;
+    case 'evening':
+      ambientLight = new THREE.AmbientLight(0x404040);
+      directionalLight = new THREE.DirectionalLight(0xFFA500, 0.3);
+      directionalLight.position.set(10, 50, 10);
+      hemisphereLight = new THREE.HemisphereLight(0xFFD700, 0x000000, 0.3);
+      break;
+    case 'night':
+      ambientLight = new THREE.AmbientLight(0x404040);
+      directionalLight = new THREE.DirectionalLight(0xaaaaaa, 0.5);
+      directionalLight.position.set(10, 50, 10);
+      hemisphereLight = new THREE.HemisphereLight(0x000080, 0x000000, 0.5);
+      break;
+    default:
+      break;
+  }
+
+  // Create a sun (SpotLight) for day mode
+  if (mode === 'day') {
+    sun = new THREE.SpotLight(0xffffff, 1);
+    sun.position.set(10, 50, 10);
+    sun.castShadow = true;
+    sun.shadow.bias = -0.0001;
+    scene.add(sun);
+
+    // Set the target for the sun to look at
+    const sunTarget = new THREE.Object3D();
+    sunTarget.position.set(0, 0, 0);
+    scene.add(sunTarget);
+    sun.target = sunTarget;
+  }
+
+  scene.add(ambientLight);
+  scene.add(directionalLight);
+  scene.add(hemisphereLight);
+}
+
+// Initial lighting mode (you can change this based on your preference)
+let lightingMode = 'day';
+setLightingMode(lightingMode);
+
+// Function to switch lighting modes
+function switchLightingMode() {
+  switch (lightingMode) {
+    case 'morning':
+      lightingMode = 'day';
+      break;
+    case 'day':
+      lightingMode = 'evening';
+      break;
+    case 'evening':
+      lightingMode = 'night';
+      break;
+    case 'night':
+      lightingMode = 'morning';
+      break;
+    default:
+      break;
+  }
+
+  setLightingMode(lightingMode);
+}
+
+// Add event listener to switch lighting mode on key press (e.g., 'L' key)
+window.addEventListener('keydown', (event) => {
+  if (event.key.toLowerCase() === 'l') {
+    switchLightingMode();
+  }
+});
 
 window.addEventListener('keydown', (event) => {
   keyboardState[event.key.toLowerCase()] = true;
@@ -72,6 +150,25 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
+const loader = new GLTFLoader().setPath('public/models/');
+loader.load('scene.gltf', (gltf) => {
+  mesh = gltf.scene;
+
+  mesh.traverse((child) => {
+    if (child.isMesh) {
+      child.material.roughness = 0.5;
+      child.material.metalness = 0.2;
+    }
+  });
+
+  mesh.position.set(0, 1.05, -1);
+  scene.add(mesh);
+
+  document.getElementById('progress-container').style.display = 'none';
+}, (xhr) => {
+  document.getElementById('progress').innerHTML = `LOADING ${Math.max(xhr.loaded / xhr.total, 1) * 100}/100`;
+});
+
 function animate() {
   requestAnimationFrame(animate);
 
@@ -87,30 +184,8 @@ function animate() {
     mesh.position.x += 0.1;
   }
 
-  // camera.rotation.y = mouseState.x * Math.PI;
-  // camera.rotation.x = mouseState.y * Math.PI;
-
   controls.update();
   renderer.render(scene, camera);
 }
-
-const loader = new GLTFLoader().setPath('public/models/');
-loader.load('scene.gltf', (gltf) => {
-  mesh = gltf.scene;
-
-  mesh.traverse((child) => {
-    if (child.isMesh) {
-      child.material.roughness = 0.5; 
-      child.material.metalness = 0.2; 
-    }
-  });
-
-  mesh.position.set(0, 1.05, -1);
-  scene.add(mesh);
-
-  document.getElementById('progress-container').style.display = 'none';
-}, ( xhr ) => {
-  document.getElementById('progress').innerHTML = `LOADING ${Math.max(xhr.loaded / xhr.total, 1) * 100}/100`;
-});
 
 animate();
