@@ -149,7 +149,7 @@ window.addEventListener('resize', () => {
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
 
-const loader = new GLTFLoader().setPath('public/models/');
+const loader = new GLTFLoader().setPath('/public/models/');
 loader.load('scene.gltf', (gltf) => {
   mesh = gltf.scene;
 
