@@ -1,4 +1,3 @@
-
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
@@ -164,9 +163,17 @@ loader.load('scene.gltf', (gltf) => {
   mesh.position.set(0, 1.05, -1);
   scene.add(mesh);
 
-  document.getElementById('progress-container').style.display = 'none';
+  // Sembunyikan elemen loading
+  document.querySelector('.wrap').style.display = 'none';
+
+  // Setelah menyembunyikan elemen loading, tambahkan mesh ke scene
+  // dan panggil fungsi animate untuk memulai rendering
+  animate();
+
 }, (xhr) => {
-  document.getElementById('progress').innerHTML = `LOADING ${Math.max(xhr.loaded / xhr.total, 1) * 100}/100`;
+  // Opsi: Perbarui elemen loading dengan persentase progress
+  const progressElement = document.querySelector('.text');
+  progressElement.innerHTML = `Fetching Assets ${(xhr.loaded / xhr.total * 100)}%`;
 });
 
 function animate() {

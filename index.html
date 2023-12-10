@@ -1,27 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>FP GRAFKOM</title>
-
-		<link rel="stylesheet" href="public/index.css">
-
-    <script async src="https://unpkg.com/es-module-shims@1.6.3/dist/es-module-shims.js"></script>
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@v0.153.0/build/three.module.js",
-          "three/addons/": "https://unpkg.com/three@v0.153.0/examples/jsm/"
-        }
-      }
-    </script>
-	</head>
-	<body>
-    <div>
-      <div id="progress-container">
-        <div id="progress">LOADING 0/100</div>
-      </div>
-    </div>
-		<script type="module" src="./main.js"></script>
-	</body>
+<html lang="en" >
+   <head>
+      <meta charset="UTF-8">
+      <title>Final Project Grafkom</title>
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+      <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap'>
+      <link rel="stylesheet" href="./style.css">
+   </head>
+   <body>
+      <section class="section section--intro">
+         <svg class="cross-1" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+         </svg>
+         <svg class="cross-2" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+         </svg>
+         <div class="ring ring--left"></div>
+         <div class="ring ring--right"></div>
+         <h3 class="hero__title hero__title--1">Kelompok 5</h3>
+         <h3 class="hero__title hero__title--2">Present</h3>
+         <p class="hero__copy"><span>Model 3D WC Teknik Informatika</span></p>
+      </section>
+      <section class="section section--text">
+         <div class="box">
+            Jelajahi representasi virtual dari toilet Informatika yang dibangun dengan detail menggunakan Blender dan dihidupkan 
+            dengan Three.js untuk menciptakan visualisasi yang realistis dan interaktif untuk 
+            memenuhi tugas Final Project mata kuliah Grafika Komputer.
+            <div class="line"></div>
+         </div>
+      </section>
+      <section class="section section--works">
+         <div class="cards">
+            <img href="/public/models/toilet.jpg" class="card card-1" data-cursor="hover"></img>
+            <img href="/public/models/toilet.jpg" class="card card-2" data-cursor="hover"></img>
+            <img href="/public/models/toilet.jpg" class="card card-3" data-cursor="hover"></img>
+         </div>
+         <svg class="cross-3" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+         </svg>
+      </section>
+      <section class="section section--text">
+         <div class="box">
+            Contributor: <br />
+            - Fathin Muhasibi Putra 5025211229 <br />
+            - Heru Dwi Kurniawan 5025211055 <br />
+            - M. Armand Giovani 5025211054 <br />
+            - Syarifah Talitha Erfany 5025211175 <br />
+            - Wan Sabrina Mayzura 5025211023 <br />
+            <div class="line2"></div>
+         </div>
+      </section>
+      <section class="section section--footer">
+         <div class="big">Mulai Jelajahi</div>
+         <div class="footer__link">
+         </div>
+         <p class="footer__copy">
+            Mulai untuk menjelajahi model virtual toilet Teknik Informatika secara keseluruhan. Tersedia fitur interaktif untuk menggerakkan
+            model, mengganti point of view camera, dan mengganti lighting sesuka hati anda.
+         </p>
+         <a href="/src/model.html" class="footer__button" data-cursor="hover" target="_blank" rel="noopener noreferer">Mulai Sekarang</a>
+      </section>
+      <div class="cursor"></div>
+      <!-- partial -->
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/gsap.min.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/CSSRulePlugin.min.js'></script>
+      <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.3.4/ScrollTrigger.min.js'></script>
+      <script src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/SplitText3.min.js'></script><script  src="./script.js"></script>
+   </body>
 </html>
