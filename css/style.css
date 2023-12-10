@@ -174,16 +174,16 @@ body {
 
 .card-1 {
   background-color: var(--yellow);
-  background-image: url("public/models/toilet3.jpg");
+  background-image: url("/public/models/toilet3.jpg");
 }
 .card-2 {
   background-color: var(--blue);
-  background-image: url("public/models/toilet2.jpg");
+  background-image: url("/public/models/toilet2.jpg");
 }
 
 .card-3 {
   background-color: var(--skyblue);
-  background-image: url("public/models/toilet.jpg");
+  background-image: url("/public/models/toilet.jpg");
 }
 
 
