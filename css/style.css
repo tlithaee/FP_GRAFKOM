@@ -219,10 +219,14 @@ body {
 }
 
 .section--footer {
-  margin-top: -200px;
+  margin-top: 10px;
   min-height: 135vh;
   mix-blend-mode: difference;
-  margin-bottom: 180px;
+}
+
+.section--footer2 {
+  margin-top: -200px;
+  mix-blend-mode: difference;
 }
 
 .cross-3 {
