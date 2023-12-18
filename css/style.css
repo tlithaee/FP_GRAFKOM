@@ -341,7 +341,7 @@ body {
   padding: 20px;
   text-align: center;
   background: linear-gradient(135deg, #fbdc74 0%, #f7c505 100%);
-  color: white;
+  color: black;
 }
 
 .profile-name {
@@ -356,7 +356,7 @@ body {
 
 .profile-nrp {
   font-size: 0.85em;
-  color: white; /* Changed color to white */
+  color: black; /* Changed color to white */
   margin-top: 5px; /* Adjust the margin as needed */
   margin-bottom: 5px; /* Provide spacing between NRP and username */
 }
@@ -366,7 +366,7 @@ body {
 }
 
 .social-links a {
-  color: white;
+  color: black;
   padding: 0 10px;
   text-decoration: none; /* Remove underlines from links */
 }
