@@ -128,6 +128,36 @@ window.addEventListener('keydown', (event) => {
   }
 });
 
+function lockPointer() {
+  renderer.domElement.requestPointerLock = renderer.domElement.requestPointerLock ||
+                                           renderer.domElement.mozRequestPointerLock ||
+                                           renderer.domElement.webkitRequestPointerLock;
+  renderer.domElement.requestPointerLock();
+}
+
+renderer.domElement.addEventListener('click', lockPointer, false);
+
+function onPointerMove(event) {
+  if (document.pointerLockElement === renderer.domElement ||
+      document.mozPointerLockElement === renderer.domElement ||
+      document.webkitPointerLockElement === renderer.domElement) {
+    let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+    let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+    const sensitivity = 0.000000000001; //makin kecil makin alus krn pusing bet coyyy
+    camera.rotation.y -= movementX * sensitivity;
+
+    // Menghitung rotasi baru untuk sumbu X
+    let newRotationX = camera.rotation.x - movementY * sensitivity;
+    newRotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, newRotationX));
+
+    // Memperbarui rotasi kamera
+    camera.rotation.set(newRotationX, camera.rotation.y, 0);
+  }
+}
+
+document.addEventListener('mousemove', onPointerMove, false);
+
 window.addEventListener('keydown', (event) => {
   keyboardState[event.key.toLowerCase()] = true;
 });
@@ -193,6 +223,8 @@ function animate() {
   if (keyboardState['a']) {
     mesh.position.addScaledVector(cameraRight, -0.1);
   }
+
+  camera.position.y = 7.0;
 
   renderer.render(scene, camera);
 }
