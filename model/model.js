@@ -18,16 +18,16 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 1000);
 camera.position.set(0, 10, 40);
 
-const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.enablePan = false;
-controls.minDistance = 5;
-controls.maxDistance = 50;
-controls.minPolarAngle = 0.5;
-controls.maxPolarAngle = 1.5;
-controls.autoRotate = false;
-controls.target = new THREE.Vector3(0, 1, 0);
-controls.update();
+// const controls = new OrbitControls(camera, renderer.domElement);
+// controls.enableDamping = true;
+// controls.enablePan = false;
+// controls.minDistance = 5;
+// controls.maxDistance = 50;
+// controls.minPolarAngle = 0.5;
+// controls.maxPolarAngle = 1.5;
+// controls.autoRotate = false;
+// controls.target = new THREE.Vector3(0, 1, 0);
+// controls.update();
 
 let mesh;
 let sun;
@@ -39,9 +39,11 @@ let ambientLight;
 let directionalLight;
 let hemisphereLight;
 
+let cameraDirection = new THREE.Vector3();
+let cameraRight = new THREE.Vector3();
+
 // Function to create different lighting modes
 function setLightingMode(mode) {
-  // Remove existing lights and sun
   scene.remove(ambientLight);
   scene.remove(directionalLight);
   scene.remove(hemisphereLight);
@@ -77,7 +79,6 @@ function setLightingMode(mode) {
       break;
   }
 
-  // Create a sun (SpotLight) for day mode
   if (mode === 'day') {
     sun = new THREE.SpotLight(0xffffff, 1);
     sun.position.set(10, 50, 10);
@@ -85,7 +86,6 @@ function setLightingMode(mode) {
     sun.shadow.bias = -0.0001;
     scene.add(sun);
 
-    // Set the target for the sun to look at
     const sunTarget = new THREE.Object3D();
     sunTarget.position.set(0, 0, 0);
     scene.add(sunTarget);
@@ -97,11 +97,9 @@ function setLightingMode(mode) {
   scene.add(hemisphereLight);
 }
 
-// Initial lighting mode (you can change this based on your preference)
 let lightingMode = 'day';
 setLightingMode(lightingMode);
 
-// Function to switch lighting modes
 function switchLightingMode() {
   switch (lightingMode) {
     case 'morning':
@@ -139,9 +137,14 @@ window.addEventListener('keyup', (event) => {
 });
 
 window.addEventListener('mousemove', (event) => {
-  mouseState.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouseState.y = -(event.clientY / window.innerHeight) * 2 + 1;
+  let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
+  let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
+
+  camera.rotation.y -= movementX * 0.002;
+  camera.rotation.x -= movementY * 0.002;
+  camera.rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, camera.rotation.x));
 });
+
 
 window.addEventListener('resize', () => {
   camera.aspect = window.innerWidth / window.innerHeight;
@@ -163,15 +166,11 @@ loader.load('scene.gltf', (gltf) => {
   mesh.position.set(0, 1.05, -1);
   scene.add(mesh);
 
-  // Sembunyikan elemen loading
   document.querySelector('.wrap').style.display = 'none';
 
-  // Setelah menyembunyikan elemen loading, tambahkan mesh ke scene
-  // dan panggil fungsi animate untuk memulai rendering
   animate();
 
 }, (xhr) => {
-  // Opsi: Perbarui elemen loading dengan persentase progress
   const progressElement = document.querySelector('.text');
   progressElement.innerHTML = `Fetching Assets ${(xhr.loaded / xhr.total * 100)}%`;
 });
@@ -179,19 +178,22 @@ loader.load('scene.gltf', (gltf) => {
 function animate() {
   requestAnimationFrame(animate);
 
+  camera.getWorldDirection(cameraDirection);
+  cameraRight.crossVectors(camera.up, cameraDirection);
+
   if (keyboardState['s']) {
-    mesh.position.z -= 0.1;
-  } else if (keyboardState['w']) {
-    mesh.position.z += 0.1;
+    mesh.position.addScaledVector(cameraDirection, 0.1);
   }
-
+  if (keyboardState['w']) {
+    mesh.position.addScaledVector(cameraDirection, -0.1);
+  }
   if (keyboardState['d']) {
-    mesh.position.x -= 0.1;
-  } else if (keyboardState['a']) {
-    mesh.position.x += 0.1;
+    mesh.position.addScaledVector(cameraRight, 0.1);
+  }
+  if (keyboardState['a']) {
+    mesh.position.addScaledVector(cameraRight, -0.1);
   }
 
-  controls.update();
   renderer.render(scene, camera);
 }
 
