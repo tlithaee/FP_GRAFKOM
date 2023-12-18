@@ -144,14 +144,14 @@ function onPointerMove(event) {
     let movementX = event.movementX || event.mozMovementX || event.webkitMovementX || 0;
     let movementY = event.movementY || event.mozMovementY || event.webkitMovementY || 0;
 
-    const sensitivity = 0.000000000001; //makin kecil makin alus krn pusing bet coyyy
+    const sensitivity = 0.00000000000001; // Sesuaikan sensitivitas sesuai kebutuhan
     camera.rotation.y -= movementX * sensitivity;
 
-    // Menghitung rotasi baru untuk sumbu X
+    // Menghitung dan membatasi rotasi baru untuk sumbu X
     let newRotationX = camera.rotation.x - movementY * sensitivity;
     newRotationX = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, newRotationX));
-
-    // Memperbarui rotasi kamera
+    
+    // Memperbarui rotasi kamera dengan mencegah rotasi di sekitar sumbu Z
     camera.rotation.set(newRotationX, camera.rotation.y, 0);
   }
 }
@@ -209,13 +209,15 @@ function animate() {
   requestAnimationFrame(animate);
 
   camera.getWorldDirection(cameraDirection);
-  cameraRight.crossVectors(camera.up, cameraDirection);
+  cameraRight.crossVectors(camera.up, cameraDirection).normalize();
 
+  let forwardDirection = new THREE.Vector3(cameraDirection.x, 0, cameraDirection.z).normalize();
+  
   if (keyboardState['s']) {
-    mesh.position.addScaledVector(cameraDirection, 0.1);
+    mesh.position.addScaledVector(forwardDirection, 0.1);
   }
   if (keyboardState['w']) {
-    mesh.position.addScaledVector(cameraDirection, -0.1);
+    mesh.position.addScaledVector(forwardDirection, -0.1);
   }
   if (keyboardState['d']) {
     mesh.position.addScaledVector(cameraRight, 0.1);
