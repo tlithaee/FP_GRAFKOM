@@ -220,7 +220,6 @@ body {
 
 .section--footer {
   margin-top: 2px;
-  margin-top: 500px;
   min-height: 50vh;
   mix-blend-mode: difference;
 }
@@ -394,4 +393,54 @@ body {
 .repository-link a:hover {
   text-decoration: underline; /* Add underline on hover for visual feedback */
 }
+.section--image-cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  justify-content: center;
+  margin: 20px auto;
+  max-width: 800px;
+}
 
+.image-card {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+  width: 600px; /* Lebar yang diinginkan */
+  height: 400px; /* Tinggi yang diinginkan */
+}
+
+.image-card img {
+  max-width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* Mengisi gambar dalam kartu */
+  display: block;
+}
+
+.image-card-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transition: opacity 0.3s;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+  padding: 20px;
+}
+
+.image-card:hover {
+  transform: scale(1.05);
+}
+
+.image-card:hover .image-card-overlay {
+  opacity: 1;
+}
